@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Monster Manual</title>
+	<link href='https://fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'>
+	<style type="text/css">
+		body{
+			background-color: #FFFFFF;
+			margin: 0px;
+		}
+		header{
+			background: linear-gradient(to bottom right, #263238, #37474F, #37474F, #455A64);
+			color: #FFFFFF;
+			font-size: 4em;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 2px 2px 4px #000000;
+			font-family: "Palatino Linotype";
+			text-align: center;
+			padding: 10px 0px 10px 0px;
+			box-shadow: 0px 10px 15px rgba(0,0,0,.5);
+		}
+		#tabla{
+			padding: 0px;
+			font-family: 'Alegreya Sans SC';
+			font-size: 22px;
+		}
+		#tabla table{
+    		border-collapse: collapse;
+    		width: 60%;
+    		margin: 0 auto;
+
+		}
+		#tabla th, td {
+    		text-align: left;
+		}
+
+		#tabla tr:nth-child(even){
+			background-color: #f2f2f2
+		}
+
+		#tabla tr:hover{
+			background-color: #909090;
+		}
+
+		#tabla #imgcol{
+			width: 80px;
+		}
+
+		
+		#tabla a{
+			display: block;
+			color: black;
+			text-decoration: none;
+			padding: 8px;
+			height: 64px;
+			line-height: 64px;
+  			vertical-align: middle;
+		}
+		
+		#tabla img{
+			width: 64px;
+			height: 64px;
+		}
+		#tabla .actions{
+			opacity: 0;
+			width: 70px;
+			vertical-align: top;
+			text-align: center;
+		}
+		#tabla .actions:hover{
+			opacity: 1;
+			width: 70px;
+			vertical-align: top;
+			text-align: center;
+		}
+		#tabla .actionsimg{
+			width: 40px;
+			height: 40px;
+			
+		}
+		#tabla .actionsanchor{
+			margin-left: auto;
+    		margin-right: auto;
+			line-height: 20px;
+		}
+		#tabla th {
+    		background-color: #37474F;
+    		color: white;
+    		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 2px 2px 4px #000000;
+		}
+		#menu{
+			width: 100%;
+			text-align: center;
+		}
+		.botones{
+ 			margin: 0 auto;
+		}
+		.botones a {
+			background-color: #37474F;
+			display: inline-block;
+			color: white;
+			text-decoration: none;
+			text-align:center;
+			padding: 8px;
+			height: auto;
+			width: 128px;
+			font-family: "Palatino Linotype";
+			font-size: 1.5em;
+			text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 2px 2px 4px #000000;
+			box-shadow: 10px 10px 30px rgba(0,0,0,.5);
+			border-radius: 15px 15px 15px 15px;
+		}
+		.botones a:hover{
+			background-color: #263238;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		Monster Manual
+	</header>
+	<br>
+	<div id="menu">
+		<div class="botones">
+			<a href="insert.php">Create New</a>
+			<a href="restore.php">Restore DB</a>
+		</div>
+	</div>
+	<br>
+	<div id="tabla">
+		<table>
+			<colgroup>
+				<col id="imgcol">
+			</colgroup>
+			<tr><th></th><th>Monster</th><th>CR</th><th>Type</th><th></th><th></th></tr>
+			<?php 
+			require_once "conexion.php";
+			$stmt = $conn->prepare("SELECT * FROM monsters ORDER BY name ASC");
+			$stmt->execute();
+			$stmt->setFetchMode(PDO::FETCH_ASSOC);
+			while ($row = $stmt->fetch()) {
+				$link = '<a href="statblock.php?id='.$row["id"].'">';
+				$img_path = "static/placeholder.png";
+				if (file_exists("static/".$row["id"].".png")) {
+					$img_path = "static/".$row["id"].".png";
+				}
+			 	echo '<tr><td>'.$link.'<img src="'.$img_path.'"></a></td><td>'.$link.$row["name"].'</a></td><td>'.$link.$row["cr"].'</a></td><td>'.$link.$row["type"].'</a></td><td class = "actions"><a class="actionsanchor" href="edit.php?id='.$row["id"].'"><img class="actionsimg" src="static/edit.png">Edit</a></td><td class = "actions"><a class="actionsanchor" href="delete.php?id='.$row["id"].'"><img class="actionsimg" src="static/delete.png">Delete</td></tr>';
+			 } 
+			?>
+		</table>
+	</div>
+
+
+</body>
+
+</html>
